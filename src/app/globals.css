@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  /* Industrial Color Palette - Dark Mode Default */
+  --color-background: #080a0f;
+  --color-foreground: #f3f4f6;
+
+  --color-card: #0f131a;
+  --color-card-foreground: #f3f4f6;
+
+  --color-popover: #0f131a;
+  --color-popover-foreground: #f3f4f6;
+
+  /* Industrial Orange / Electrical Accent */
+  --color-primary: #ff6b00;
+  --color-primary-foreground: #080a0f;
+
+  /* Steel Blue-Gray Secondaries */
+  --color-secondary: #171d26;
+  --color-secondary-foreground: #e5e7eb;
+
+  --color-muted: #1e2633;
+  --color-muted-foreground: #9ca3af;
+
+  --color-accent: #f59e0b;
+  --color-accent-foreground: #080a0f;
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: #1e293b;
+  --color-input: #1e293b;
+  --color-ring: #ff6b00;
+
+  /* Border Radii */
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
+
+  /* Custom Transitions & Animation Properties */
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-up: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-down: slide-down 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(12px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slide-down {
+    from { transform: translateY(-12px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}
+
+/* Custom base styles & global overrides */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    min-height: 100vh;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Steel-grid texture decoration */
+  .industrial-grid {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(30, 41, 59, 0.15) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(30, 41, 59, 0.15) 1px, transparent 1px);
+  }
+
+  /* Sleek modern scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #080a0f;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ff6b00;
+  }
+}
