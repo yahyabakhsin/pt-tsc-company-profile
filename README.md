@@ -16,7 +16,7 @@ Website Company Profile PT Tirta Surya Cipta menggunakan **Next.js Full Stack**.
 
 ---
 
-## Clone Project
+# Clone Project
 
 ```bash
 git clone https://github.com/<username>/pt-tsc-company-profile.git
@@ -28,17 +28,34 @@ pnpm dev
 
 ---
 
-## Branch
 
-- `main` → Branch utama (Jangan push langsung)
-- `frontend` → Frontend Developer
-- `backend` → Backend Developer
+# Pertama Kali 
+
+Ambil branch terbaru dari GitHub
+
+```bash
+git fetch origin
+```
+
+Frontend
+
+```bash
+git checkout -b frontend origin/frontend
+```
+
+Backend
+
+```bash
+git checkout -b backend origin/backend
+```
+
+> Jalankan command di atas **sekali aja**.
 
 ---
 
-## Frontend
+# Workflow Frontend
 
-Pindah ke branch frontend
+Masuk ke branch frontend
 
 ```bash
 git checkout frontend
@@ -50,19 +67,26 @@ Update branch
 git pull origin frontend
 ```
 
-Push perubahan
+Coding...
+
+Commit
 
 ```bash
 git add .
 git commit -m "feat: create hero section"
+```
+
+Push
+
+```bash
 git push origin frontend
 ```
 
 ---
 
-## Backend
+# Workflow Backend
 
-Pindah ke branch backend
+Masuk ke branch backend
 
 ```bash
 git checkout backend
@@ -74,17 +98,24 @@ Update branch
 git pull origin backend
 ```
 
-Push perubahan
+Coding...
+
+Commit
 
 ```bash
 git add .
 git commit -m "feat: create project API"
+```
+
+Push
+
+```bash
 git push origin backend
 ```
 
 ---
 
-## Command
+# Useful Commands
 
 Lihat branch
 
@@ -98,11 +129,9 @@ Lihat status
 git status
 ```
 
-Update branch utama
+Update branch main
 
 ```bash
 git checkout main
 git pull origin main
 ```
-
----
