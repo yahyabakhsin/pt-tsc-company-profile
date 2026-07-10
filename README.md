@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PT TSC Company Profile
 
-## Getting Started
+Website Company Profile PT Tirta Surya Cipta menggunakan **Next.js Full Stack**.
 
-First, run the development server:
+---
+
+## Tech Stack
+
+- Next.js 15
+- React
+- TypeScript
+- Tailwind CSS
+- Prisma ORM
+- MySQL
+- pnpm
+
+---
+
+## Clone Project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+git clone https://github.com/<username>/pt-tsc-company-profile.git
+cd pt-tsc-company-profile
+
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Branch
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `main` → Branch utama (Jangan push langsung)
+- `frontend` → Frontend Developer
+- `backend` → Backend Developer
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Pindah ke branch frontend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+git checkout frontend
+```
 
-## Deploy on Vercel
+Update branch
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git pull origin frontend
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Push perubahan
+
+```bash
+git add .
+git commit -m "feat: create hero section"
+git push origin frontend
+```
+
+---
+
+## Backend
+
+Pindah ke branch backend
+
+```bash
+git checkout backend
+```
+
+Update branch
+
+```bash
+git pull origin backend
+```
+
+Push perubahan
+
+```bash
+git add .
+git commit -m "feat: create project API"
+git push origin backend
+```
+
+---
+
+## Command
+
+Lihat branch
+
+```bash
+git branch
+```
+
+Lihat status
+
+```bash
+git status
+```
+
+Update branch utama
+
+```bash
+git checkout main
+git pull origin main
+```
+
+---
+
+## Notes
