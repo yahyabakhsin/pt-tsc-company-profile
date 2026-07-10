@@ -106,5 +106,3 @@ git pull origin main
 ```
 
 ---
-
-## Notes
