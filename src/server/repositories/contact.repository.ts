@@ -1,13 +1,12 @@
 import { prisma } from "../db/prisma";
-import { Prisma, MessageStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 /**
  * Data access repository for contact messages (leads).
  */
 export class ContactRepository {
-  async findAll(status?: MessageStatus) {
+  async findAll() {
     return prisma.contactMessage.findMany({
-      where: status ? { status } : {},
       orderBy: {
         createdAt: "desc",
       },
@@ -23,13 +22,6 @@ export class ContactRepository {
   async create(data: Prisma.ContactMessageCreateInput) {
     return prisma.contactMessage.create({
       data,
-    });
-  }
-
-  async updateStatus(id: string, status: MessageStatus) {
-    return prisma.contactMessage.update({
-      where: { id },
-      data: { status },
     });
   }
 

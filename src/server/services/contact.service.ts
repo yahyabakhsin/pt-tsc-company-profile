@@ -1,13 +1,12 @@
 import { contactRepository } from "../repositories/contact.repository";
 import { contactSchema, ContactInput } from "../validators/contact.validator";
-import { MessageStatus } from "@prisma/client";
 
 /**
  * Service handling lead capturing and status operations.
  */
 export class ContactService {
-  async getInquiries(status?: MessageStatus) {
-    return contactRepository.findAll(status);
+  async getInquiries() {
+    return contactRepository.findAll();
   }
 
   async getInquiryById(id: string) {
@@ -24,22 +23,14 @@ export class ContactService {
 
     // Save message to database
     return contactRepository.create({
-      name: validatedData.name,
+      fullName: validatedData.fullName,
       email: validatedData.email,
-      company: validatedData.company || null,
+      companyName: validatedData.companyName || null,
       phone: validatedData.phone || null,
-      subject: validatedData.subject || "Lead Inquiry from PT TSC website",
+      subject: validatedData.subject,
+      serviceType: validatedData.serviceType || null,
       message: validatedData.message,
-      status: "UNREAD",
     });
-  }
-
-  async updateInquiryStatus(id: string, status: MessageStatus) {
-    const inquiry = await contactRepository.findById(id);
-    if (!inquiry) {
-      throw new Error("Inquiry message not found");
-    }
-    return contactRepository.updateStatus(id, status);
   }
 
   async deleteInquiry(id: string) {

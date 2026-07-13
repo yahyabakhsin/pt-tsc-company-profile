@@ -7,20 +7,13 @@ import { prisma } from "@/server/db/prisma";
 
 export async function GET() {
   try {
-    let settings = await prisma.settings.findFirst();
-
-    // If no settings exist yet, create default settings placeholder
-    if (!settings) {
-      settings = await prisma.settings.create({
-        data: {
-          id: 1,
-          companyName: "PT Tirta Surya Cipta",
-          contactEmail: "info@tirtasuryacipta.com",
-          metaTitle: "PT Tirta Surya Cipta - Industrial Automation & System Integration",
-          metaDescription: "Specialist in PLC Programming, SCADA Systems, VSD, and Electrical Control Panels.",
-        },
-      });
-    }
+    const settings = {
+      id: 1,
+      companyName: "PT Tirta Surya Cipta",
+      contactEmail: "info@tirtasuryacipta.com",
+      metaTitle: "PT Tirta Surya Cipta - Industrial Automation & System Integration",
+      metaDescription: "Specialist in PLC Programming, SCADA Systems, VSD, and Electrical Control Panels.",
+    };
 
     return NextResponse.json({
       success: true,

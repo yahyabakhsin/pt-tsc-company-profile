@@ -7,8 +7,6 @@ import { contactSchema, ContactInput } from "@/server/validators/contact.validat
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
@@ -25,9 +23,9 @@ export default function ContactPage() {
   } = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      name: "",
+      fullName: "",
       email: "",
-      company: "",
+      companyName: "",
       phone: "",
       subject: "",
       message: "",
@@ -96,12 +94,12 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs text-gray-400 font-medium">Contact Name *</label>
-                    <Input {...register("name")} placeholder="John Doe" />
-                    {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+                    <input {...register("fullName")} placeholder="John Doe" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                    {errors.fullName && <p className="text-xs text-red-500">{errors.fullName.message}</p>}
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs text-gray-400 font-medium">Work Email *</label>
-                    <Input {...register("email")} type="email" placeholder="john@company.com" />
+                    <input {...register("email")} type="email" placeholder="john@company.com" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                     {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                   </div>
                 </div>
@@ -109,28 +107,29 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-xs text-gray-400 font-medium">Company Name</label>
-                    <Input {...register("company")} placeholder="PT Manufacturing Indonesia" />
-                    {errors.company && <p className="text-xs text-red-500">{errors.company.message}</p>}
+                    <input {...register("companyName")} placeholder="PT Manufacturing Indonesia" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                    {errors.companyName && <p className="text-xs text-red-500">{errors.companyName.message}</p>}
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs text-gray-400 font-medium">Phone Number</label>
-                    <Input {...register("phone")} placeholder="+62..." />
+                    <input {...register("phone")} placeholder="+62..." className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                     {errors.phone && <p className="text-xs text-red-500">{errors.phone.message}</p>}
                   </div>
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-xs text-gray-400 font-medium">Inquiry Subject</label>
-                  <Input {...register("subject")} placeholder="PLC Logic Retrofit / SCADA System Config" />
+                  <input {...register("subject")} placeholder="PLC Logic Retrofit / SCADA System Config" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
                   {errors.subject && <p className="text-xs text-red-500">{errors.subject.message}</p>}
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-xs text-gray-400 font-medium">Automation Requirements *</label>
-                  <Textarea
+                  <textarea
                     {...register("message")}
                     placeholder="Describe your control systems, logic processors, panel design requirements, or specific downtime concerns..."
                     rows={5}
+                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   />
                   {errors.message && <p className="text-xs text-red-500">{errors.message.message}</p>}
                 </div>
