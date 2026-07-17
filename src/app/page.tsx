@@ -3,9 +3,8 @@ import { Container } from "@/components/shared/container";
 import { Section } from "@/components/shared/section";
 import { Heading } from "@/components/shared/heading";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Cpu, Server, Radio, Zap, Settings, Shield } from "lucide-react";
-
 export default function Home() {
   const capabilities = [
     {
@@ -79,16 +78,18 @@ export default function Home() {
           </Heading>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {capabilities.map((cap) => (
-              <Card key={cap.title} className="bg-card hover:bg-secondary/40">
-                <CardHeader>
-                  <div className="mb-4">{cap.icon}</div>
-                  <CardTitle className="text-xl text-white">{cap.title}</CardTitle>
-                  <CardDescription className="pt-2">{cap.desc}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
+  {capabilities.map((cap, index) => (
+    <Card key={index} className="bg-card border-border hover:border-primary transition-all">
+      <CardHeader>
+        <div className="text-primary">{cap.icon}</div>
+        <CardTitle className="text-foreground">{cap.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground">{cap.desc}</p>
+      </CardContent>
+    </Card>
+  ))}
+</div>
         </Container>
       </Section>
     </>

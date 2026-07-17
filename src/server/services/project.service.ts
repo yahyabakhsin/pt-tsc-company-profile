@@ -6,7 +6,7 @@ import { Prisma } from "@prisma/client";
  * Service handling business logic for Projects.
  */
 export class ProjectService {
-  async getAllProjects(filters?: { serviceId?: string; take?: number; skip?: number }) {
+  async getAllProjects(filters?: { take?: number; skip?: number }) {
     return projectRepository.findAll(filters);
   }
 
@@ -40,28 +40,19 @@ export class ProjectService {
     const createData: Prisma.ProjectCreateInput = {
       title: validatedData.title,
       slug: validatedData.slug,
-      description: validatedData.description,
-      content: validatedData.content,
-      client: validatedData.client,
+      overview: validatedData.overview,
       location: validatedData.location,
-      completedAt: validatedData.completedAt ? new Date(validatedData.completedAt) : null,
-      status: validatedData.status,
-      service: validatedData.serviceId
-        ? { connect: { id: validatedData.serviceId } }
-        : undefined,
-      images: validatedData.imageUrls.length > 0
-        ? {
-            create: validatedData.imageUrls.map((url, index) => ({
-              url,
-              isFeatured: index === 0,
-            })),
-          }
-        : undefined,
-      applicationAreas: validatedData.applicationAreaIds.length > 0
-        ? {
-            connect: validatedData.applicationAreaIds.map((id) => ({ id })),
-          }
-        : undefined,
+      projectYear: validatedData.projectYear,
+      industryType: validatedData.industryType,
+      applicationType: validatedData.applicationType,
+      projectType: validatedData.projectType,
+      services: validatedData.services,
+      challenge: validatedData.challenge,
+      solution: validatedData.solution,
+      result: validatedData.result,
+      highlights: validatedData.highlights,
+      thumbnailImage: validatedData.thumbnailImage,
+      galleryImages: validatedData.galleryImages,
     };
 
     return projectRepository.create(createData);
@@ -87,22 +78,19 @@ export class ProjectService {
     const updateData: Prisma.ProjectUpdateInput = {
       title: validatedData.title,
       slug: validatedData.slug,
-      description: validatedData.description,
-      content: validatedData.content,
-      client: validatedData.client,
+      overview: validatedData.overview,
       location: validatedData.location,
-      completedAt: validatedData.completedAt
-        ? new Date(validatedData.completedAt)
-        : validatedData.completedAt === ""
-        ? null
-        : undefined,
-      status: validatedData.status,
-      service: validatedData.serviceId !== undefined
-        ? validatedData.serviceId
-          ? { connect: { id: validatedData.serviceId } }
-          : { disconnect: true }
-        : undefined,
-      // More complex relationships like images can be handled via repository extension
+      projectYear: validatedData.projectYear,
+      industryType: validatedData.industryType,
+      applicationType: validatedData.applicationType,
+      projectType: validatedData.projectType,
+      services: validatedData.services,
+      challenge: validatedData.challenge,
+      solution: validatedData.solution,
+      result: validatedData.result,
+      highlights: validatedData.highlights,
+      thumbnailImage: validatedData.thumbnailImage,
+      galleryImages: validatedData.galleryImages,
     };
 
     return projectRepository.update(id, updateData);

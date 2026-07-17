@@ -1,56 +1,32 @@
 import { NextResponse } from "next/server";
-import { loginSchema } from "@/server/validators/auth.validator";
-import { prisma } from "@/server/db/prisma";
-import { verifyPassword } from "@/server/auth/crypto";
+import { prisma } from "@/lib/prisma";
+import bcrypt from "bcrypt";
 
-/**
- * Route handler for POST /api/admin/login
- */
-
-export async function POST(request: Request) {
+export async function GET() {
   try {
-    const body = await request.json();
-    const validation = loginSchema.safeParse(body);
-
-    if (!validation.success) {
-      return NextResponse.json(
-        { success: false, errors: validation.error.flatten().fieldErrors },
-        { status: 400 }
-      );
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: validation.data.email },
+    // Cek apakah admin sudah ada
+    const existingAdmin = await prisma.user.findUnique({
+      where: { email: "admin@tscindo.net" }
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: "Invalid credentials" },
-        { status: 401 }
-      );
+    if (existingAdmin) {
+      return NextResponse.json({ message: "Admin account already exists!" });
     }
 
-    const isValid = verifyPassword(validation.data.password, user.passwordHash);
+    // Hash password "admin123" (Bisa lu ganti password-nya)
+    const hashedPassword = await bcrypt.hash("admin123", 10);
 
-    if (!isValid) {
-      return NextResponse.json(
-        { success: false, error: "Invalid credentials" },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "Authentication successful",
+    // Buat user baru
+    const admin = await prisma.user.create({
       data: {
-        email: user.email,
-        role: user.role,
-      },
+        name: "Super Admin",
+        email: "admin@tscindo.net",
+        password: hashedPassword,
+      }
     });
-  } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message || "Failed to process login request" },
-      { status: 500 }
-    );
+
+    return NextResponse.json({ message: "Admin created successfully!", user: admin.email });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to create admin" }, { status: 500 });
   }
 }

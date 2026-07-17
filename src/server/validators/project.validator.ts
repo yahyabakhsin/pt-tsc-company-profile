@@ -13,43 +13,19 @@ export const projectSchema = z.object({
     .min(3, "Slug must be at least 3 characters")
     .regex(/^[a-z0-9-]+$/, "Slug must only contain lowercase alphanumeric characters and hyphens")
     .max(150, "Slug must be under 150 characters"),
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters")
-    .max(500, "Description must be under 500 characters"),
-  content: z
-    .string()
-    .optional()
-    .or(z.literal("")),
-  client: z
-    .string()
-    .optional()
-    .or(z.literal("")),
-  location: z
-    .string()
-    .optional()
-    .or(z.literal("")),
-  completedAt: z
-    .string()
-    .datetime({ message: "Completed date must be a valid ISO date" })
-    .optional()
-    .or(z.literal("")),
-  status: z
-    .enum(["COMPLETED", "IN_PROGRESS", "PLANNED"])
-    .default("COMPLETED"),
-  serviceId: z
-    .string()
-    .uuid("Invalid Service ID")
-    .optional()
-    .or(z.literal("")),
-  imageUrls: z
-    .array(z.string().url("Invalid image URL"))
-    .optional()
-    .default([]),
-  applicationAreaIds: z
-    .array(z.string().uuid("Invalid Application Area ID"))
-    .optional()
-    .default([]),
+  overview: z.string().min(10, "Overview must be at least 10 characters"),
+  location: z.string().min(2, "Location is required"),
+  projectYear: z.number().int().min(1900).max(2100),
+  industryType: z.string().min(2, "Industry type is required"),
+  applicationType: z.string().min(2, "Application type is required"),
+  projectType: z.string().min(2, "Project type is required"),
+  services: z.string().min(2, "Services is required"),
+  challenge: z.string().min(10, "Challenge must be at least 10 characters"),
+  solution: z.string().min(10, "Solution must be at least 10 characters"),
+  result: z.string().min(10, "Result must be at least 10 characters"),
+  highlights: z.array(z.string()).default([]),
+  thumbnailImage: z.string().url("Invalid image URL"),
+  galleryImages: z.array(z.string().url("Invalid image URL")).default([]),
 });
 
 export type ProjectInput = z.infer<typeof projectSchema>;

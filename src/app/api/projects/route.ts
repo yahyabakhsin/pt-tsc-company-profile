@@ -9,11 +9,10 @@ import { projectService } from "@/server/services/project.service";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const serviceId = searchParams.get("serviceId") || undefined;
     const take = searchParams.get("take") ? parseInt(searchParams.get("take")!) : undefined;
     const skip = searchParams.get("skip") ? parseInt(searchParams.get("skip")!) : undefined;
 
-    const projects = await projectService.getAllProjects({ serviceId, take, skip });
+    const projects = await projectService.getAllProjects({ take, skip });
     
     return NextResponse.json({
       success: true,

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { projectService } from "@/server/services/project.service";
@@ -40,14 +39,16 @@ export default async function ProjectsPage() {
             <Card key={project.id} className="flex flex-col h-full bg-card hover:bg-[#0f131a]/80">
               <CardHeader className="flex-grow">
                 <div className="flex justify-between items-start mb-3 gap-2">
-                  <Badge variant="primary">
-                    {project.service?.name || "System Integration"}
-                  </Badge>
-                  <Badge variant="outline">{project.status}</Badge>
+                  <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+                    {project.services || "System Integration"}
+                  </span>
+                  <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground">
+                    {project.projectYear}
+                  </span>
                 </div>
                 <CardTitle className="text-xl line-clamp-1">{project.title}</CardTitle>
                 <CardDescription className="pt-2 line-clamp-3">
-                  {project.description}
+                  {project.overview}
                 </CardDescription>
               </CardHeader>
               <CardFooter className="pt-0">

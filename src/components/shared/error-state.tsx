@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AlertOctagon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 
 export interface ErrorStateProps extends React.HTMLAttributes<HTMLDivElement> {
