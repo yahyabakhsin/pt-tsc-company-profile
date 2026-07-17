@@ -1,32 +1,64 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { sign } from "jsonwebtoken";
+import { cookies } from "next/headers";
 
-export async function GET() {
+export async function POST(req: NextRequest) {
   try {
-    // Cek apakah admin sudah ada
-    const existingAdmin = await prisma.user.findUnique({
-      where: { email: "admin@tscindo.net" }
-    });
+    const { email, password } = await req.json();
 
-    if (existingAdmin) {
-      return NextResponse.json({ message: "Admin account already exists!" });
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Email and password are required" },
+        { status: 400 }
+      );
     }
 
-    // Hash password "admin123" (Bisa lu ganti password-nya)
-    const hashedPassword = await bcrypt.hash("admin123", 10);
+    const user = await prisma.user.findUnique({ where: { email } });
 
-    // Buat user baru
-    const admin = await prisma.user.create({
-      data: {
-        name: "Super Admin",
-        email: "admin@tscindo.net",
-        password: hashedPassword,
-      }
+    if (!user) {
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401 }
+      );
+    }
+
+    const isValid = await bcrypt.compare(password, user.passwordHash);
+
+    if (!isValid) {
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401 }
+      );
+    }
+
+    // Buat JWT token
+    const token = sign(
+      { id: user.id, email: user.email, role: user.role },
+      process.env.AUTH_SECRET!,
+      { expiresIn: "7d" }
+    );
+
+    // Set cookie
+    const cookieStore = await cookies();
+    cookieStore.set("admin_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 hari
+      path: "/",
     });
 
-    return NextResponse.json({ message: "Admin created successfully!", user: admin.email });
+    return NextResponse.json({
+      success: true,
+      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+    });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to create admin" }, { status: 500 });
+    console.error("Login error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

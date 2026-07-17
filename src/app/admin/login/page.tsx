@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "@/server/validators/auth.validator";
 import { Container } from "@/components/shared/container";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
@@ -63,24 +64,22 @@ export default function AdminLoginPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1">
               <label className="text-xs text-gray-400 font-medium">Email Address</label>
-              <input
+              <Input
                 {...register("email")}
                 type="email"
                 placeholder="admin@tirtasuryacipta.com"
                 autoComplete="email"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
               {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
             </div>
 
             <div className="space-y-1">
               <label className="text-xs text-gray-400 font-medium">Secure Password</label>
-              <input
+              <Input
                 {...register("password")}
                 type="password"
                 placeholder="••••••••"
                 autoComplete="current-password"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
               {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
             </div>
