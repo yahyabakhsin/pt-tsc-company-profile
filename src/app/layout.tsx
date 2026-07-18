@@ -27,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning={true}>
         <Navbar />
         <main className="pt-[70px]">
           {children}

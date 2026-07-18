@@ -28,25 +28,29 @@ export async function createProject(formData: FormData) {
       }
     }
 
-    const data = {
-      title: formData.get("title")?.toString() || "",
-      slug: formData.get("slug")?.toString() || "",
-      overview: formData.get("overview")?.toString() || "",
-      location: formData.get("location")?.toString() || "",
-      projectYear: parseInt(formData.get("projectYear")?.toString() || "0", 10),
-      industryType: formData.get("industryType")?.toString() || "",
-      applicationType: formData.get("applicationType")?.toString() || "",
-      projectType: formData.get("projectType")?.toString() || "",
-      services: formData.get("services")?.toString() || "",
-      challenge: formData.get("challenge")?.toString() || "",
-      solution: formData.get("solution")?.toString() || "",
-      result: formData.get("result")?.toString() || "",
-      highlights: formData.getAll("highlights").map(h => h.toString()),
-      thumbnailImage: thumbnailUrl || formData.get("thumbnailImage")?.toString() || "",
-      galleryImages: galleryImages.length > 0 ? galleryImages : formData.getAll("galleryImages").map(g => g.toString()),
-    };
+    const newProject = await prisma.project.create({
+  data: {
+    title: formData.get("title") as string,
+    slug: formData.get("slug") as string,
+    overview: formData.get("overview") as string,
+    thumbnailImage: thumbnailUrl, // URL dari Cloudinary
+    
+    // Kasih nilai default untuk kolom wajib lainnya biar Prisma gak ngeluarin error 'missing argument'
+    location: (formData.get("location") as string) || "Indonesia",
+    projectYear: parseInt(formData.get("projectYear") as string) || new Date().getFullYear(),
+    industryType: (formData.get("industryType") as string) || "General",
+    applicationType: (formData.get("applicationType") as string) || "Standard",
+    projectType: (formData.get("projectType") as string) || "Industrial",
+    challenge: (formData.get("challenge") as string) || "-",
+    solution: (formData.get("solution") as string) || "-",
+    result: (formData.get("result") as string) || "-",
+    services: (formData.get("services") as string) || "-",
+    highlights: formData.getAll("highlights").map(h => h.toString()),
+    galleryImages: [], // Beri array kosong untuk gallery jika belum di-upload
+  },
+});
 
-    const validatedData = projectSchema.safeParse(data);
+    const validatedData = projectSchema.safeParse(newProject);
 
     if (!validatedData.success) {
       return { 

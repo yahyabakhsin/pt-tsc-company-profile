@@ -12,9 +12,11 @@ export default function NotFoundPage() {
         description="The requested routing node or URL path is not available on our telemetry server."
         icon={<AlertCircle className="h-10 w-10 text-primary animate-pulse" />}
       />
-      <Button className="mt-8" asChild>
-        <Link href="/">Return to Plant Dashboard</Link>
-      </Button>
+      <Link href="/" passHref>
+        <Button className="mt-8">
+          Return to Plant Dashboard
+        </Button>
+      </Link>
     </Container>
   );
 }

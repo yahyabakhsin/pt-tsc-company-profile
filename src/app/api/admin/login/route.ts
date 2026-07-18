@@ -6,41 +6,57 @@ import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    const { email, password } = body;
 
+    // 1. Validasi Input Dasar
     if (!email || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { success: false, error: "Email dan password wajib diisi." },
         { status: 400 }
       );
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    // 2. Cek User di Database
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-    if (!user) {
+    // 3. Verifikasi Kredensial (Gunakan pesan seragam demi keamanan / Mencegah Email Enumeration)
+    if (!user || !user.password) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { success: false, error: "Kredensial tidak valid." },
         { status: 401 }
       );
     }
 
-    const isValid = await bcrypt.compare(password, user.passwordHash);
-
-    if (!isValid) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+    if (!isPasswordValid) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { success: false, error: "Kredensial tidak valid." },
         { status: 401 }
       );
     }
 
-    // Buat JWT token
+    // 4. Pastikan Secret Key Tersedia
+    const secret = process.env.AUTH_SECRET;
+    if (!secret) {
+      console.error("[AUTH_ERROR] Missing AUTH_SECRET in environment variables.");
+      return NextResponse.json(
+        { success: false, error: "Terjadi kesalahan konfigurasi server." },
+        { status: 500 }
+      );
+    }
+
+    // 5. Generate Token
     const token = sign(
-      { id: user.id, email: user.email, role: user.role },
-      process.env.AUTH_SECRET!,
+      { id: user.id, email: user.email, role: "admin" },
+      secret,
       { expiresIn: "7d" }
     );
 
-    // Set cookie
+    // 6. Set HttpOnly Cookie (Aman dari XSS)
     const cookieStore = await cookies();
     cookieStore.set("admin_token", token, {
       httpOnly: true,
@@ -50,14 +66,22 @@ export async function POST(req: NextRequest) {
       path: "/",
     });
 
+    // 7. Response Berhasil
     return NextResponse.json({
       success: true,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      message: "Login berhasil",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: "admin",
+      },
     });
+
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("[LOGIN_CRITICAL_ERROR]", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { success: false, error: "Terjadi kesalahan pada server." },
       { status: 500 }
     );
   }

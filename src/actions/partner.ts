@@ -1,34 +1,42 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
 import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
 
 export async function createPartner(formData: FormData) {
   try {
-    const name = formData.get("name")?.toString();
-    const logoFile = formData.get("logoFile") as File | null;
+    const name = formData.get("name") as string;
+    const displayOrder = parseInt(formData.get("displayOrder") as string) || 1;
+    const file = formData.get("logo") as File;
 
-    if (!name || !logoFile || logoFile.size === 0) {
-      return { error: "Nama partner dan file logo wajib diisi" };
+    // 1. Cek apakah file benar-benar ada
+    if (!file || file.size === 0) {
+      return { error: "File gambar tidak ditemukan!" };
     }
 
-    const buffer = Buffer.from(await logoFile.arrayBuffer());
-    const logoUrl = await uploadImageToCloudinary(buffer, "partners");
+    // 2. Ubah file jadi Buffer (Ini yang sering bikin gagal)
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    await prisma.partner.create({
+    // 3. Upload ke Cloudinary
+    const imageUrl = await uploadImageToCloudinary(buffer, "partners");
+
+    // 4. Simpan ke database
+    const newPartner = await prisma.partner.create({
       data: {
         name,
-        logoUrl,
+        logoUrl: imageUrl,
+        displayOrder,
       },
     });
 
     revalidatePath("/about");
-    revalidatePath("/admin/dashboard");
-    return { success: true, message: "Partner berhasil ditambahkan" };
-  } catch (error) {
-    console.error("Error createPartner:", error);
-    return { error: "Gagal menambahkan partner" };
+    return { success: true, message: "Partner berhasil diupload!", data: newPartner };
+
+  } catch (error: any) {
+    console.error("Upload Error:", error);
+    return { error: "Gagal upload: " + error.message };
   }
 }
 
@@ -40,37 +48,8 @@ export async function getPartners() {
       },
     });
     return partners;
-  } catch (error) {
-    console.error("Error getPartners:", error);
+  } catch (error: any) {
+    console.error("Fetch Error:", error);
     return [];
-  }
-}
-
-export async function updatePartnerOrder(id: string, newOrder: number) {
-  try {
-    await prisma.partner.update({
-      where: { id },
-      data: { displayOrder: newOrder },
-    });
-    revalidatePath("/about");
-    revalidatePath("/admin/dashboard");
-    return { success: true, message: "Urutan partner diperbarui" };
-  } catch (error) {
-    console.error("Error updatePartnerOrder:", error);
-    return { error: "Gagal memperbarui urutan partner" };
-  }
-}
-
-export async function deletePartner(id: string) {
-  try {
-    await prisma.partner.delete({
-      where: { id },
-    });
-    revalidatePath("/about");
-    revalidatePath("/admin/dashboard");
-    return { success: true, message: "Partner berhasil dihapus" };
-  } catch (error) {
-    console.error("Error deletePartner:", error);
-    return { error: "Gagal menghapus partner" };
   }
 }
