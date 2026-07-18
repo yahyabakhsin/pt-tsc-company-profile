@@ -1,37 +1,38 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import { QueryProvider } from "@/providers/query-provider";
-import { Toaster } from "sonner";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+});
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "PT Tirta Surya Cipta | Industrial Automation & Systems Integration",
-  description: "Enterprise-grade industrial system solutions including PLC programming, HMI/SCADA development, electrical control panels, and automation integration.",
+  title: 'PT Tirta Surya Cipta – Industrial Automation Solutions',
+  description:
+    'We deliver integrated industrial solutions, from control systems to field services, built for performance, reliability, and long-term value.',
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className={`${inter.variable} dark`}>
-      <body className="font-sans antialiased bg-background text-foreground flex flex-col min-h-screen">
-        <QueryProvider>
-          <Navbar />
-          <main className="flex-grow flex flex-col">
-            {children}
-          </main>
-          <Footer />
-          <Toaster position="top-right" theme="dark" richColors />
-        </QueryProvider>
+    <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="antialiased" suppressHydrationWarning={true}>
+        <Navbar />
+        <main className="pt-[70px]">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

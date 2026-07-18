@@ -17,7 +17,7 @@ export interface ActionResponse<T> {
 export async function loginAction(
   prevState: any,
   formData: FormData
-): Promise<ActionResponse<{ email: string; role: string }>> {
+): Promise<ActionResponse<{ email: string; name: string | null }>> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -36,14 +36,14 @@ export async function loginAction(
       where: { email: result.data.email },
     });
 
-    if (!user) {
+    if (!user || !user.password) {
       return {
         success: false,
         message: "Invalid email or password",
       };
     }
 
-    const isValid = verifyPassword(result.data.password, user.passwordHash);
+    const isValid = verifyPassword(result.data.password, user.password);
 
     if (!isValid) {
       return {
@@ -57,8 +57,8 @@ export async function loginAction(
       success: true,
       message: "Login successful",
       data: {
-        email: user.email,
-        role: user.role,
+        email: user.email!,
+        name: user.name,
       },
     };
   } catch (error: any) {

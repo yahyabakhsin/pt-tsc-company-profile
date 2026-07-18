@@ -6,38 +6,12 @@ import { Prisma } from "@prisma/client";
  */
 export class ProjectRepository {
   async findAll(options?: {
-    serviceId?: string;
-    isActive?: boolean;
     take?: number;
     skip?: number;
   }) {
-    const where: Prisma.ProjectWhereInput = {};
-
-    if (options?.serviceId) {
-      where.serviceId = options.serviceId;
-    }
-
     return prisma.project.findMany({
-      where,
-      include: {
-        images: true,
-        service: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        applicationAreas: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-      },
       orderBy: {
-        completedAt: "desc",
+        createdAt: "desc",
       },
       take: options?.take,
       skip: options?.skip,
@@ -47,31 +21,18 @@ export class ProjectRepository {
   async findById(id: string) {
     return prisma.project.findUnique({
       where: { id },
-      include: {
-        images: true,
-        service: true,
-        applicationAreas: true,
-      },
     });
   }
 
   async findBySlug(slug: string) {
     return prisma.project.findUnique({
       where: { slug },
-      include: {
-        images: true,
-        service: true,
-        applicationAreas: true,
-      },
     });
   }
 
   async create(data: Prisma.ProjectCreateInput) {
     return prisma.project.create({
       data,
-      include: {
-        images: true,
-      },
     });
   }
 
@@ -79,9 +40,6 @@ export class ProjectRepository {
     return prisma.project.update({
       where: { id },
       data,
-      include: {
-        images: true,
-      },
     });
   }
 

@@ -4,7 +4,7 @@ import { z } from "zod";
  * Zod validation schema for contact message / lead inquiries
  */
 export const contactSchema = z.object({
-  name: z
+  fullName: z
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must be under 100 characters"),
@@ -12,7 +12,7 @@ export const contactSchema = z.object({
     .string()
     .min(1, "Email is required")
     .email("Must be a valid email address"),
-  company: z
+  companyName: z
     .string()
     .max(100, "Company name must be under 100 characters")
     .optional()
@@ -24,7 +24,11 @@ export const contactSchema = z.object({
     .or(z.literal("")),
   subject: z
     .string()
-    .max(150, "Subject must be under 150 characters")
+    .min(1, "Subject is required")
+    .max(150, "Subject must be under 150 characters"),
+  serviceType: z
+    .string()
+    .max(100, "Service type must be under 100 characters")
     .optional()
     .or(z.literal("")),
   message: z
