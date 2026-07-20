@@ -9,6 +9,8 @@ import axios from "axios";
 import { MapPin, Mail, Phone, Clock, Loader2, MessageCircle, ArrowRight, CheckCircle2, Check, HelpCircle, Wrench, Shield, Cpu, Headphones } from "lucide-react";
 import Link from "next/link";
 import { FadeUp } from "@/components/shared/FadeUp";
+import CtaBanner from '@/components/shared/CtaBanner';
+
 
 export default function ContactPage() {
   const [submitting, setSubmitting] = React.useState(false);
@@ -82,14 +84,14 @@ export default function ContactPage() {
           <div className="flex-1 w-full relative h-[400px]">
             <FadeUp delay={200} className="w-full h-full">
               <div className="grid grid-cols-2 grid-rows-2 gap-3 h-full">
-                <div className="col-span-2 row-span-1 rounded-xl overflow-hidden bg-[#1F6B45]">
-                  <div className="w-full h-full bg-cover bg-center opacity-80" style={{ backgroundImage: "url('/images/project-1a.jpg')" }} />
+                <div className="col-span-2 row-span-1 rounded-xl overflow-hidden">
+                  <div className="w-full h-full bg-cover bg-center opacity-80" style={{ backgroundImage: "url('/images/about-hero.webp')" }} />
                 </div>
-                <div className="rounded-xl overflow-hidden bg-[#2E8B57]">
-                  <div className="w-full h-full bg-cover bg-center opacity-80" style={{ backgroundImage: "url('/images/project-1b.jpg')" }} />
+                <div className="rounded-xl overflow-hidden">
+                  <div className="w-full h-full bg-cover bg-center opacity-80" style={{ backgroundImage: "url('/images/vfd.webp')" }} />
                 </div>
-                <div className="rounded-xl overflow-hidden bg-[#3a5a42]">
-                  <div className="w-full h-full bg-cover bg-center opacity-80" style={{ backgroundImage: "url('/images/project-1c.jpg')" }} />
+                <div className="rounded-xl overflow-hidden">
+                  <div className="w-full h-full bg-cover bg-center opacity-80" style={{ backgroundImage: "url('/images/mining.webp')" }} />
                 </div>
               </div>
             </FadeUp>
@@ -390,81 +392,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ══ CTA BANNER ══ */}
-      <section>
-        <div className="relative bg-[#071A14] overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-20"
-            style={{ backgroundImage: "url('/images/hero-bg.jpg')", mixBlendMode: 'luminosity' }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#071A14]/90 via-[#071A14]/60 to-[#071A14]/90" />
-
-          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-14">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
-
-              <FadeUp className="max-w-md">
-                <h2 className="text-white text-2xl sm:text-3xl font-bold leading-snug mb-3">
-                  Have a Project Requirement to Discuss?
-                </h2>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  If you already have a defined scope, technical requirement, or planned upgrade, submit a quote request and our team will review your project needs.
-                </p>
-              </FadeUp>
-
-              <FadeUp delay={100} className="flex flex-col sm:flex-row lg:flex-row gap-8 shrink-0 w-full lg:w-auto">
-                <div className="flex flex-col gap-5">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#1F6B45]/40 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 size={14} className="text-[#59D66F]" />
-                    </div>
-                    <div>
-                      <p className="text-white text-xs font-semibold">Consultation & Site Survey</p>
-                      <p className="text-gray-400 text-xs">We assess your needs on-site</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#1F6B45]/40 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 size={14} className="text-[#59D66F]" />
-                    </div>
-                    <div>
-                      <p className="text-white text-xs font-semibold">Engineering & Solution Design</p>
-                      <p className="text-gray-400 text-xs">Tailored to your operational goals</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-5 justify-center">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#1F6B45]/40 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 size={14} className="text-[#59D66F]" />
-                    </div>
-                    <div>
-                      <p className="text-white text-xs font-semibold">Support & After-Sales Service</p>
-                      <p className="text-gray-400 text-xs">Reliable support for long-term operations</p>
-                    </div>
-                  </div>
-                </div>
-              </FadeUp>
-
-              <FadeUp delay={180} className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 w-full sm:w-auto">
-                <Link
-                  href="/quote"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#59D66F] text-[#071A14] text-sm font-bold hover:bg-[#4bc45e] transition-colors"
-                >
-                  Request a Quote <ArrowRight size={14} />
-                </Link>
-                <a
-                  href="https://wa.me/6285159775365"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-[#59D66F]/50 text-[#59D66F] text-sm font-bold hover:bg-[#59D66F]/10 transition-colors"
-                >
-                  <MessageCircle size={14} /> Chat on WhatsApp
-                </a>
-              </FadeUp>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaBanner
+        heading="Have a Project Requirement to Discuss?"
+        subtext="If you already have a defined scope, technical requirement, or planned upgrade, submit a quote request and our team wil review your project needs."
+        primaryLabel="Request a Quote →"
+      />
 
     </main>
   );

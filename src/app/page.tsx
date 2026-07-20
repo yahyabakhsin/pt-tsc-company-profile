@@ -62,12 +62,12 @@ const stats = [
 ];
 
 const services = [
-  { slug: 'electrical-control', tag: 'ELECTRICAL & CONTROL', title: 'Electrical and Control System Engineering', icon: Zap, image: '/images/services/electrical.webp', desc: 'We design reliable electrical and control systems tailored to industrial process requirements, ensuring safe, efficient, and scalable operations.' },
-  { slug: 'panel-manufacturing', tag: 'PANEL MANUFACTURING', title: 'Panel Manufacturing & Integration', icon: Settings, image: '/images/services/panel.webp', desc: 'We manufacture and integrate control panels with precision, combining quality assembly, functional testing, and site-ready deployments.' },
-  { slug: 'technical-service', tag: 'TECHNICAL SERVICE', title: 'Technical Service & Long-Term Support', icon: Shield, image: '/images/services/technical.webp', desc: 'We deliver responsive technical service and long-term support to help maintain peak performance and minimize downtime.' },
-  { slug: 'commissioning', tag: 'COMMISSIONING', title: 'Commisioning & Troubleshooting', icon: Wrench, image: '/images/services/commissioning.webp', desc: 'We provide on-site commissioning and troubleshooting services to ensure smooth system startup and continuous reliability.' },
-  { slug: 'inverter-vsd', tag: 'INVERTER & VSD SOLUTION', title: 'Inverter / VSD Implementation for Industrial Systems', icon: BarChart2, image: '/images/services/vsd.webp', desc: 'We implement inverter and VSD solutions to improve energy efficiency, process control, and equipment performance across industrial application.' },
-  { slug: 'upgrade-retrofit', tag: 'UPGRADE & OPTIMIZATION', title: 'Upgrade, Retrofit, and Optimization of Existing Systems', icon: RefreshCw, image: '/images/services/upgrade.webp', desc: 'We upgrade and optimize existing installations to enhance reliability, extend equipment life, and improve overall system.' },
+  { slug: 'electrical-control', tag: 'ELECTRICAL & CONTROL', title: 'Electrical and Control System Engineering', icon: Zap, image: '/images/home-electrical.webp', desc: 'We design reliable electrical and control systems tailored to industrial process requirements, ensuring safe, efficient, and scalable operations.' },
+  { slug: 'panel-manufacturing', tag: 'PANEL MANUFACTURING', title: 'Panel Manufacturing & Integration', icon: Settings, image: '/images/home-panel.webp', desc: 'We manufacture and integrate control panels with precision, combining quality assembly, functional testing, and site-ready deployments.' },
+  { slug: 'technical-service', tag: 'TECHNICAL SERVICE', title: 'Technical Service & Long-Term Support', icon: Shield, image: '/images/home-technical.webp', desc: 'We deliver responsive technical service and long-term support to help maintain peak performance and minimize downtime.' },
+  { slug: 'commissioning', tag: 'COMMISSIONING', title: 'Commisioning & Troubleshooting', icon: Wrench, image: '/images/home-commissioning.webp', desc: 'We provide on-site commissioning and troubleshooting services to ensure smooth system startup and continuous reliability.' },
+  { slug: 'inverter-vsd', tag: 'INVERTER & VSD SOLUTION', title: 'Inverter / VSD Implementation for Industrial Systems', icon: BarChart2, image: '/images/home-inverter.webp', desc: 'We implement inverter and VSD solutions to improve energy efficiency, process control, and equipment performance across industrial application.' },
+  { slug: 'upgrade-retrofit', tag: 'UPGRADE & OPTIMIZATION', title: 'Upgrade, Retrofit, and Optimization of Existing Systems', icon: RefreshCw, image: '/images/home-upgrade.webp', desc: 'We upgrade and optimize existing installations to enhance reliability, extend equipment life, and improve overall system.' },
 ];
 
 const reasons = [
@@ -93,7 +93,7 @@ export default function HomePage() {
       <section className="relative min-h-[92vh] flex flex-col justify-center bg-[#071A14] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-50"
-          style={{ backgroundImage: "url('/images/hero-bg.webp')", mixBlendMode: 'luminosity' }}
+          style={{ backgroundImage: "url('/images/home-hero.webp')", mixBlendMode: 'luminosity' }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#071A14]/95 via-[#071A14]/60 to-[#071A14]/20" />
 
@@ -158,7 +158,7 @@ export default function HomePage() {
                   {/* image area */}
                   <div className="relative h-44 bg-[#DDE9E2] overflow-hidden">
                     <div
-                      className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500 brightness-[0.5]"
+                      className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500 saturate-75 contrast-80 brightness-90"
                       style={{ backgroundImage: `url('${image}')` }}
                     />
                     {/* fallback gradient jika foto belum ada */}
@@ -227,8 +227,8 @@ export default function HomePage() {
             <FadeUp>
               <div className="group relative h-64 sm:h-80 w-full overflow-hidden">
                 <div
-                  className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-110 transition-transform duration-700"
-                  style={{ backgroundImage: "url('/images/hero-bg.webp')" }}
+                  className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-110 transition-transform duration-700 saturate-60"
+                  style={{ backgroundImage: "url('/images/booster-pump-home.webp')" }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#071A14]/80 via-[#071A14]/30 to-transparent" />
                 <div className="absolute bottom-5 left-6 flex items-center gap-3">
