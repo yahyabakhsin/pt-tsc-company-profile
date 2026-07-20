@@ -10,8 +10,6 @@ import {
   Plus,
   ArrowRight,
   Clock,
-  CheckCircle2,
-  AlertCircle,
   LogOut,
 } from "lucide-react";
 
@@ -20,15 +18,16 @@ async function getAdminUser() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("admin_token")?.value;
+    
     if (!token) return null;
-    const payload = verify(token, process.env.AUTH_SECRET!) as {
+    
+    const payload = verify(token, process.env.AUTH_SECRET || "rahasia_negara_123") as {
       id: string;
       email: string;
-      name?: string;
       role: string;
     };
     return payload;
-  } catch {
+  } catch (error) {
     return null;
   }
 }
@@ -36,14 +35,16 @@ async function getAdminUser() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default async function AdminDashboardPage() {
   const user = await getAdminUser();
-  if (!user) redirect("/admin/login");
+  
+  if (!user) {
+    redirect("/admin/login");
+  }
 
-  // Fetch data dari DB
+  // Tarik data dari DB
   const [projects, contacts, partners] = await Promise.all([
     prisma.project.findMany({
       orderBy: { createdAt: "desc" },
       take: 5,
-      include: { images: { where: { isFeatured: true }, take: 1 } },
     }),
     prisma.contactMessage.findMany({
       orderBy: { createdAt: "desc" },
@@ -54,20 +55,18 @@ export default async function AdminDashboardPage() {
 
   const totalProjects = await prisma.project.count();
   const totalContacts = await prisma.contactMessage.count();
-  const unreadContacts = await prisma.contactMessage.count({
-    where: { status: "UNREAD" },
-  });
+  
+  // FIX 1: Hapus fitur unreadContacts karena di DB gak ada kolom status
+  const unreadContacts = 0; 
 
   const stats = [
     { label: "Total Projects", value: totalProjects, icon: FolderOpen, color: "text-[#1F6B45]", bg: "bg-[#DDE9E2]", href: "/admin/projects" },
     { label: "Partners", value: partners, icon: Users, color: "text-blue-600", bg: "bg-blue-50", href: "/admin/partners" },
     { label: "Total Messages", value: totalContacts, icon: MessageSquare, color: "text-amber-600", bg: "bg-amber-50", href: "/admin/contacts" },
-    { label: "Unread Messages", value: unreadContacts, icon: AlertCircle, color: "text-red-500", bg: "bg-red-50", href: "/admin/contacts" },
   ];
 
   return (
     <div className="min-h-screen bg-[#F7F9F8]">
-
       {/* Top bar */}
       <div className="bg-[#071A14] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -87,7 +86,6 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-[#1E293B] text-2xl font-bold">Dashboard</h1>
@@ -95,7 +93,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {stats.map(({ label, value, icon: Icon, color, bg, href }) => (
             <Link key={label} href={href} className="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md hover:border-[#59D66F]/30 transition-all">
               <div className="flex items-center justify-between mb-3">
@@ -112,33 +110,18 @@ export default async function AdminDashboardPage() {
 
         {/* Quick Actions */}
         <div className="flex flex-wrap gap-3 mb-8">
-          <Link
-            href="/admin/projects/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#59D66F] text-[#071A14] text-sm font-bold hover:bg-[#4bc45e] transition-colors"
-          >
+          <Link href="/admin/projects/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#59D66F] text-[#071A14] text-sm font-bold hover:bg-[#4bc45e] transition-colors">
             <Plus size={15} /> Add Project
           </Link>
-          <Link
-            href="/admin/partners/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-gray-200 text-[#1E293B] text-sm font-semibold hover:border-[#59D66F]/40 transition-colors"
-          >
+          <Link href="/admin/partners/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-gray-200 text-[#1E293B] text-sm font-semibold hover:border-[#59D66F]/40 transition-colors">
             <Plus size={15} /> Add Partner
           </Link>
-          <Link
-            href="/admin/contacts"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-gray-200 text-[#1E293B] text-sm font-semibold hover:border-[#59D66F]/40 transition-colors"
-          >
+          <Link href="/admin/contacts" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white border border-gray-200 text-[#1E293B] text-sm font-semibold hover:border-[#59D66F]/40 transition-colors">
             <MessageSquare size={15} /> View Messages
-            {unreadContacts > 0 && (
-              <span className="w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
-                {unreadContacts}
-              </span>
-            )}
           </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
           {/* Recent Projects */}
           <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
@@ -149,23 +132,18 @@ export default async function AdminDashboardPage() {
             </div>
             {projects.length === 0 ? (
               <div className="px-5 py-10 text-center text-[#6B7280] text-sm">
-                No projects yet.{" "}
-                <Link href="/admin/projects/new" className="text-[#1F6B45] font-semibold">Add one</Link>
+                No projects yet. <Link href="/admin/projects/new" className="text-[#1F6B45] font-semibold">Add one</Link>
               </div>
             ) : (
               <ul className="divide-y divide-gray-50">
-                {projects.map((project) => (
+                {projects.map((project: any) => (
                   <li key={project.id}>
-                    <Link
-                      href={`/admin/projects/${project.id}/edit`}
-                      className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors"
-                    >
-                      {/* Thumbnail */}
+                    <Link href={`/admin/projects/${project.id}/edit`} className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors">
                       <div className="w-10 h-10 rounded-lg bg-[#DDE9E2] overflow-hidden shrink-0">
-                        {project.images[0] && (
+                        {project.thumbnailImage && (
                           <div
                             className="w-full h-full bg-cover bg-center"
-                            style={{ backgroundImage: `url('${project.images[0].url}')` }}
+                            style={{ backgroundImage: `url('${project.thumbnailImage}')` }}
                           />
                         )}
                       </div>
@@ -173,14 +151,6 @@ export default async function AdminDashboardPage() {
                         <p className="text-[#1E293B] text-sm font-semibold truncate">{project.title}</p>
                         <p className="text-[#6B7280] text-xs">{project.location ?? "—"}</p>
                       </div>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${project.status === "COMPLETED"
-                          ? "bg-[#DDE9E2] text-[#1F6B45]"
-                          : project.status === "IN_PROGRESS"
-                            ? "bg-blue-50 text-blue-600"
-                            : "bg-gray-100 text-gray-500"
-                        }`}>
-                        {project.status}
-                      </span>
                     </Link>
                   </li>
                 ))}
@@ -202,23 +172,19 @@ export default async function AdminDashboardPage() {
               </div>
             ) : (
               <ul className="divide-y divide-gray-50">
-                {contacts.map((msg) => (
+                {contacts.map((msg: any) => (
                   <li key={msg.id}>
-                    <Link
-                      href={`/admin/contacts/${msg.id}`}
-                      className="flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors"
-                    >
+                    <Link href={`/admin/contacts/${msg.id}`} className="flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors">
                       <div className="w-8 h-8 rounded-full bg-[#DDE9E2] flex items-center justify-center shrink-0 mt-0.5">
                         <span className="text-[#1F6B45] text-xs font-bold">
-                          {msg.name.charAt(0).toUpperCase()}
+                          {/* FIX 2: Ganti msg.name jadi msg.fullName */}
+                          {msg.fullName ? msg.fullName.charAt(0).toUpperCase() : "?"}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-[#1E293B] text-sm font-semibold truncate">{msg.name}</p>
-                          {msg.status === "UNREAD" && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-                          )}
+                          {/* FIX 3: Sesuaikan pemanggilan data */}
+                          <p className="text-[#1E293B] text-sm font-semibold truncate">{msg.fullName}</p>
                         </div>
                         <p className="text-[#6B7280] text-xs truncate">{msg.subject ?? msg.message}</p>
                         <p className="text-gray-400 text-[10px] mt-0.5 flex items-center gap-1">
@@ -228,21 +194,12 @@ export default async function AdminDashboardPage() {
                           })}
                         </p>
                       </div>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${msg.status === "UNREAD"
-                          ? "bg-red-50 text-red-500"
-                          : msg.status === "READ"
-                            ? "bg-gray-100 text-gray-500"
-                            : "bg-[#DDE9E2] text-[#1F6B45]"
-                        }`}>
-                        {msg.status}
-                      </span>
                     </Link>
                   </li>
                 ))}
               </ul>
             )}
           </div>
-
         </div>
       </div>
     </div>

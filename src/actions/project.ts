@@ -3,21 +3,54 @@
 import { projectSchema } from "@/lib/validations/project";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { uploadImageToCloudinary } from "@/lib/cloudinary";
 
-export async function createProject(formData: FormData | any) {
+export async function createProject(formData: FormData) {
   try {
-    let data;
-    if (formData instanceof FormData) {
-      data = {
-        ...Object.fromEntries(formData.entries()),
-        highlights: formData.getAll("highlights"),
-        galleryImages: formData.getAll("galleryImages"),
-      };
-    } else {
-      data = formData;
+    // Extract thumbnail
+    const thumbnailFile = formData.get("thumbnailFile") as File | null;
+    let thumbnailUrl = "";
+    
+    if (thumbnailFile && thumbnailFile.size > 0) {
+      const buffer = Buffer.from(await thumbnailFile.arrayBuffer());
+      thumbnailUrl = await uploadImageToCloudinary(buffer, "projects/thumbnails");
     }
 
-    const validatedData = projectSchema.safeParse(data);
+    // Extract galleries
+    const galleryFiles = formData.getAll("galleryFiles") as File[];
+    const galleryImages: string[] = [];
+    
+    for (const file of galleryFiles) {
+      if (file.size > 0) {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const url = await uploadImageToCloudinary(buffer, "projects/galleries");
+        galleryImages.push(url);
+      }
+    }
+
+    const newProject = await prisma.project.create({
+  data: {
+    title: formData.get("title") as string,
+    slug: formData.get("slug") as string,
+    overview: formData.get("overview") as string,
+    thumbnailImage: thumbnailUrl, // URL dari Cloudinary
+    
+    // Kasih nilai default untuk kolom wajib lainnya biar Prisma gak ngeluarin error 'missing argument'
+    location: (formData.get("location") as string) || "Indonesia",
+    projectYear: parseInt(formData.get("projectYear") as string) || new Date().getFullYear(),
+    industryType: (formData.get("industryType") as string) || "General",
+    applicationType: (formData.get("applicationType") as string) || "Standard",
+    projectType: (formData.get("projectType") as string) || "Industrial",
+    challenge: (formData.get("challenge") as string) || "-",
+    solution: (formData.get("solution") as string) || "-",
+    result: (formData.get("result") as string) || "-",
+    services: (formData.get("services") as string) || "-",
+    highlights: formData.getAll("highlights").map(h => h.toString()),
+    galleryImages: [], // Beri array kosong untuk gallery jika belum di-upload
+  },
+});
+
+    const validatedData = projectSchema.safeParse(newProject);
 
     if (!validatedData.success) {
       return { 
@@ -31,10 +64,73 @@ export async function createProject(formData: FormData | any) {
     });
 
     revalidatePath("/projects");
+    revalidatePath("/admin/dashboard");
 
     return { success: true, message: "Proyek berhasil dibuat" };
   } catch (error) {
     console.error("Error di createProject:", error);
     return { error: "Terjadi kesalahan saat menyimpan proyek." };
+  }
+}
+
+export async function getProjects() {
+  try {
+    const projects = await prisma.project.findMany({
+      where: {
+        deletedAt: null,
+      },
+      orderBy: {
+        createdAt: "desc",
+      }
+    });
+    return projects;
+  } catch (error) {
+    console.error("Error getProjects:", error);
+    return [];
+  }
+}
+
+export async function getProjectBySlug(slug: string) {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { slug },
+    });
+    if (project?.deletedAt) return null;
+    return project;
+  } catch (error) {
+    console.error("Error getProjectBySlug:", error);
+    return null;
+  }
+}
+
+export async function updateProject(id: string, data: any) {
+  try {
+    await prisma.project.update({
+      where: { id },
+      data,
+    });
+    revalidatePath("/projects");
+    revalidatePath("/admin/dashboard");
+    return { success: true, message: "Proyek berhasil diperbarui" };
+  } catch (error) {
+    console.error("Error updateProject:", error);
+    return { error: "Terjadi kesalahan saat memperbarui proyek" };
+  }
+}
+
+export async function deleteProject(id: string) {
+  try {
+    await prisma.project.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+    revalidatePath("/projects");
+    revalidatePath("/admin/dashboard");
+    return { success: true, message: "Proyek berhasil dihapus" };
+  } catch (error) {
+    console.error("Error deleteProject:", error);
+    return { error: "Terjadi kesalahan saat menghapus proyek" };
   }
 }
