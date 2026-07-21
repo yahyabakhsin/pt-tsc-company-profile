@@ -4,6 +4,7 @@ import Link from 'next/link';
 import NextImage from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import CtaBanner from '@/components/shared/CtaBanner';
+import PartnerSection from '@/components/shared/PartnerSection';
 import {
   ArrowRight,
   ChevronRight,
@@ -318,32 +319,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ PARTNERS ══ */}
-      <section className="py-16 bg-[#F7F9F8]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <FadeUp className="text-center mb-10">
-            <p className="text-[#1F6B45] text-[11px] font-bold tracking-[0.2em] uppercase">OUR TECHNICAL PARTNERS</p>
-          </FadeUp>
-          <FadeUp delay={100}>
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-5">
-              {[
-                { logo: '/images/logo-leo.webp', alt: 'LEO', desc: 'Drives & Motor Technology' },
-                { logo: '/images/logo-slanvert.webp', alt: 'SLANVERT', desc: 'Industrial Electrical Components' },
-              ].map(({ logo, alt, desc }) => (
-                <div key={alt} className="flex items-center gap-5 px-8 py-5 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#59D66F]/30 transition-all w-full sm:w-auto min-w-[240px]">
-                  <div className="w-[120px] h-[48px] relative shrink-0">
-                    <NextImage src={logo} alt={alt} fill className="object-contain" />
-                  </div>
-                  <div className="h-8 w-px bg-gray-100 shrink-0" />
-                  <p className="text-[#6B7280] text-xs leading-snug max-w-[100px]">{desc}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-center text-[#6B7280] text-xs mt-7 max-w-xl mx-auto">
-              We collaborate with selected technology partners to deliver reliable and fit-for-purpose industrial solutions.
-            </p>
-          </FadeUp>
-        </div>
-      </section>
+      <PartnerSection />
 
       <CtaBanner
         heading="Ready to Optimize Your Industrial Systems?"

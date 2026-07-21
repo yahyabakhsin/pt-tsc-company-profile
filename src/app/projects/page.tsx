@@ -9,17 +9,13 @@ export const revalidate = 0;
 export default async function ProjectsPage() {
   // Fetch dari database
   const projects = await prisma.project.findMany({
+    where: { deletedAt: null },
     orderBy: { createdAt: "desc" },
-    include: {
-      images: true,
-      service: { select: { id: true, name: true, slug: true } },
-      applicationAreas: { select: { id: true, name: true, slug: true } },
-    },
   });
 
   // Featured project = project pertama
   const featured = projects[0] ?? null;
-  const featuredThumbnail = featured?.images.find((i) => i.isFeatured)?.url ?? featured?.images[0]?.url ?? null;
+  const featuredThumbnail = featured?.thumbnailImage ?? null;
 
   return (
     <main>
@@ -84,7 +80,7 @@ export default async function ProjectsPage() {
                   </div>
                   <div>
                     <h4 className="text-amber-600 text-xs font-bold mb-1.5 uppercase">Challenge (Problem)</h4>
-                    <p className="text-[#1E293B] text-sm leading-relaxed">{featured.description}</p>
+                    <p className="text-[#1E293B] text-sm leading-relaxed">{featured.challenge}</p>
                   </div>
                 </div>
 
@@ -94,7 +90,7 @@ export default async function ProjectsPage() {
                   </div>
                   <div>
                     <h4 className="text-blue-600 text-xs font-bold mb-1.5 uppercase">Our Solution</h4>
-                    <p className="text-[#1E293B] text-sm leading-relaxed">{featured.content ?? "—"}</p>
+                    <p className="text-[#1E293B] text-sm leading-relaxed">{featured.solution ?? "—"}</p>
                   </div>
                 </div>
 
@@ -106,8 +102,8 @@ export default async function ProjectsPage() {
                     <h4 className="text-[#1F6B45] text-xs font-bold mb-1.5 uppercase">Project Info</h4>
                     <ul className="flex flex-col gap-1 text-sm text-[#1E293B]">
                       <li className="flex items-start gap-2"><span className="text-[#59D66F] font-bold mt-0.5">•</span> Location: {featured.location ?? "—"}</li>
-                      <li className="flex items-start gap-2"><span className="text-[#59D66F] font-bold mt-0.5">•</span> Status: {featured.status}</li>
-                      {featured.service && <li className="flex items-start gap-2"><span className="text-[#59D66F] font-bold mt-0.5">•</span> Service: {featured.service.name}</li>}
+                      <li className="flex items-start gap-2"><span className="text-[#59D66F] font-bold mt-0.5">•</span> Status: COMPLETED</li>
+                      {featured.services && <li className="flex items-start gap-2"><span className="text-[#59D66F] font-bold mt-0.5">•</span> Service: {featured.services}</li>}
                     </ul>
                   </div>
                 </div>
@@ -144,8 +140,8 @@ export default async function ProjectsPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => {
-                const thumb = project.images.find((i) => i.isFeatured)?.url ?? project.images[0]?.url;
-                const tag = project.applicationAreas[0]?.name ?? project.service?.name ?? "Project";
+                const thumb = project.thumbnailImage;
+                const tag = project.applicationType ?? project.services ?? "Project";
                 return (
                   <Link
                     key={project.id}
@@ -167,13 +163,10 @@ export default async function ProjectsPage() {
                     <div className="p-6 flex-1 flex flex-col">
                       <span className="text-[#59D66F] text-[10px] font-bold tracking-[0.1em] uppercase mb-1.5 line-clamp-1">{tag}</span>
                       <h3 className="font-bold text-[#1E293B] text-base leading-snug mb-3 line-clamp-2">{project.title}</h3>
-                      <p className="text-xs text-gray-500 line-clamp-2 flex-1">{project.description}</p>
+                      <p className="text-xs text-gray-500 line-clamp-2 flex-1">{project.overview}</p>
                       <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${project.status === "COMPLETED" ? "bg-[#DDE9E2] text-[#1F6B45]" :
-                          project.status === "IN_PROGRESS" ? "bg-blue-50 text-blue-600" :
-                            "bg-gray-100 text-gray-500"
-                          }`}>
-                          {project.status}
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#DDE9E2] text-[#1F6B45]`}>
+                          COMPLETED
                         </span>
                         <ArrowRight size={14} className="text-[#1F6B45] group-hover:translate-x-1 transition-transform" />
                       </div>

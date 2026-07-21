@@ -31,12 +31,8 @@ const tagColors: Record<string, string> = {
 
 export default async function ProjectsAllPage() {
   const projects = await prisma.project.findMany({
+    where: { deletedAt: null },
     orderBy: { createdAt: 'desc' },
-    include: {
-      images: true,
-      service: { select: { id: true, name: true, slug: true } },
-      applicationAreas: { select: { id: true, name: true, slug: true } },
-    },
   });
 
   return (
@@ -110,8 +106,8 @@ export default async function ProjectsAllPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project, i) => {
-                const thumb = project.images.find((img) => img.isFeatured)?.url ?? project.images[0]?.url;
-                const tag = project.applicationAreas[0]?.name ?? project.service?.name ?? 'Project';
+                const thumb = project.thumbnailImage;
+                const tag = project.applicationType ?? project.services ?? 'Project';
                 return (
                   <div
                     key={project.id}
@@ -131,20 +127,20 @@ export default async function ProjectsAllPage() {
                         {tag}
                       </span>
                       <h3 className="text-[#1E293B] font-bold text-base leading-snug mb-2">{project.title}</h3>
-                      <p className="text-[#6B7280] text-sm leading-relaxed flex-1 line-clamp-3">{project.description}</p>
+                      <p className="text-[#6B7280] text-sm leading-relaxed flex-1 line-clamp-3">{project.overview}</p>
                       <div className="flex items-center gap-6 mt-4 pt-4 border-t border-gray-50">
                         <div className="flex items-center gap-2">
                           <Building2 size={13} className="text-[#6B7280]" />
                           <div>
                             <p className="text-[#6B7280] text-[10px]">Industry</p>
-                            <p className="text-[#1E293B] text-xs font-semibold">{project.applicationAreas[0]?.name ?? '—'}</p>
+                            <p className="text-[#1E293B] text-xs font-semibold">{project.industryType ?? '—'}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <Settings size={13} className="text-[#6B7280]" />
                           <div>
                             <p className="text-[#6B7280] text-[10px]">Service</p>
-                            <p className="text-[#1E293B] text-xs font-semibold">{project.service?.name ?? '—'}</p>
+                            <p className="text-[#1E293B] text-xs font-semibold">{project.services ?? '—'}</p>
                           </div>
                         </div>
                       </div>
